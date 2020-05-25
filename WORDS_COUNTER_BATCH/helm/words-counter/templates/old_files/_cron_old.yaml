@@ -1,0 +1,70 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "words-counter.fullname" . }}
+spec:
+  schedule: {{ .Values.schedule | quote }}
+  successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: {{ .Chart.Name }}
+              image: {{ .Values.image.repository }}:{{ .Chart.AppVersion }}
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              env:
+                # Get secrets
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secrets
+                      key: awsAccessKeyId
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secrets
+                      key: awsSecretAccessKey
+                - name: DB_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secrets
+                      key: mysqlUser
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secrets
+                      key: mysqlPassword
+                # Get configs
+                - name: AWS_BUCKET
+                  valueFrom:
+                    configMapKeyRef:
+                      name: app-configs
+                      key: awsBucketName
+                - name: AWS_REGION
+                  valueFrom:
+                    configMapKeyRef:
+                      name: app-configs
+                      key: awsRegionName
+                - name: DB_DATABASE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: app-configs
+                      key: mysqlDbDatabaseName
+                - name: DB_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: app-configs
+                      key: mysqlDbHost
+                - name: WORDS_COUNTER_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: app-configs
+                      key: openfassWordsCounterUrl
+                - name: LOG_LEVEL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: app-configs
+                      key: logLevel
+          restartPolicy: OnFailure

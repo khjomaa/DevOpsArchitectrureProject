@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-configs
+data:
+  AWS_BUCKET: {{ .Values.config.aws.bucketName }}
+  AWS_REGION: {{ .Values.config.aws.regionName }}
+  DB_HOST: {{ .Values.config.mysql.dbHost }}
+  DB_DATABASE: {{ .Values.config.mysql.dbDatabaseName }}
+  WORDS_COUNTER_URL: {{ .Values.config.openFaas.wordsCounterUrl }}
+  LOG_LEVEL: {{ .Values.config.logger.level }}

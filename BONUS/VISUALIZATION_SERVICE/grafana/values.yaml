@@ -1,0 +1,44 @@
+service:
+  type: NodePort
+  nodePort: 32688
+
+persistence:
+  enabled: true
+
+grafana.ini:
+  users:
+    allow_sign_up: true
+
+adminPassword: admin123
+
+sidecar:
+  dashboards:
+    enabled: true
+    label: grafana_dashboard
+    provider:
+      allowUiUpdates: true
+  datasources:
+    enabled: true
+    label: grafana_datasource
+
+# This is not working - Creates an empty json file!!!
+# https://github.com/helm/charts/tree/master/stable/grafana#import-dashboards
+#dashboardProviders:
+#  dashboardproviders.yaml:
+#    apiVersion: 1
+#    providers:
+#    - name: 'default'
+#      orgId: 1
+#      folder: ''
+#      type: file
+#      disableDeletion: false
+#      editable: true
+#      updateIntervalSeconds: 10
+#      allowUpdates: true
+#      options:
+#        path: /var/lib/grafana/dashboards/default
+#
+#dashboards:
+#  default:
+#    aws-mysql:
+#      file: dashboards/aws-mysql.json

@@ -1,0 +1,24 @@
+image:
+  repository: khjomaa/words-counter
+  pullPolicy: IfNotPresent
+
+# Run CronJob every 24 hours
+schedule: "0 0 * * *"
+
+successfulJobsHistoryLimit: 1
+
+failedJobsHistoryLimit: 1
+
+config:
+  logger:
+  # Set logger level (Default: INFO), Values: CRITICAL, ERROR, WARNING, INFO, DEBUG (case sensitive)
+  #    level:
+  aws:
+    bucketName: <AWS S3 Bucket Name>
+    regionName: <AWS Region Name>
+  mysql:
+    dbHost: <AWS RDS MySQL Endpoint>
+    dbDatabaseName: <RDS MySQL Database Name>
+  openFaas:
+    wordsCounterUrl: http://gateway.openfaas:8080/function/word-counter
+
